@@ -1,4 +1,4 @@
-# XMC4800_Simple_SOES_Slave
+# XMC4800_Simple_SOES_Slave - EtherCAT
 
 ![image](https://user-images.githubusercontent.com/32091677/154466757-94ec70eb-4ea5-4070-bedc-38739e0c68ee.png)
 
