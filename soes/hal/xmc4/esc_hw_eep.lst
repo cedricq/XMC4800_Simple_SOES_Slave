@@ -1,0 +1,565 @@
+   1              	 .cpu cortex-m4
+   2              	 .eabi_attribute 27,1
+   3              	 .eabi_attribute 20,1
+   4              	 .eabi_attribute 21,1
+   5              	 .eabi_attribute 23,3
+   6              	 .eabi_attribute 24,1
+   7              	 .eabi_attribute 25,1
+   8              	 .eabi_attribute 26,1
+   9              	 .eabi_attribute 30,4
+  10              	 .eabi_attribute 34,1
+  11              	 .eabi_attribute 18,4
+  12              	 .file "esc_hw_eep.c"
+  13              	 .text
+  14              	 .section .text.cleanup_unused_sect,"ax",%progbits
+  15              	 .align 1
+  16              	 .arch armv7e-m
+  17              	 .syntax unified
+  18              	 .thumb
+  19              	 .thumb_func
+  20              	 .fpu fpv4-sp-d16
+  22              	cleanup_unused_sect:
+  23              	 
+  24              	 
+  25 0000 0B4B     	 ldr r3,.L8
+  26 0002 10B5     	 push {r4,lr}
+  27 0004 800C     	 lsrs r0,r0,#18
+  28 0006 0B4C     	 ldr r4,.L8+4
+  29 0008 8004     	 lsls r0,r0,#18
+  30 000a A042     	 cmp r0,r4
+  31 000c 08BF     	 it eq
+  32 000e 1C46     	 moveq r4,r3
+  33 0010 04F57F32 	 add r2,r4,#261120
+  34 0014 231F     	 subs r3,r4,#4
+  35 0016 02F57F72 	 add r2,r2,#1020
+  36              	.L4:
+  37 001a 53F8041F 	 ldr r1,[r3,#4]!
+  38 001e 19B9     	 cbnz r1,.L3
+  39 0020 9A42     	 cmp r2,r3
+  40 0022 FAD1     	 bne .L4
+  41              	.L1:
+  42 0024 2046     	 mov r0,r4
+  43 0026 10BD     	 pop {r4,pc}
+  44              	.L3:
+  45 0028 2046     	 mov r0,r4
+  46 002a FFF7FEFF 	 bl XMC_FLASH_EraseSector
+  47 002e F9E7     	 b .L1
+  48              	.L9:
+  49              	 .align 2
+  50              	.L8:
+  51 0030 00001C0C 	 .word 203161600
+  52 0034 0000180C 	 .word 202899456
+  54              	 .section .text.find_latest_block,"ax",%progbits
+  55              	 .align 1
+  56              	 .syntax unified
+  57              	 .thumb
+  58              	 .thumb_func
+  59              	 .fpu fpv4-sp-d16
+  61              	find_latest_block:
+  62              	 
+  63              	 
+  64 0000 2DE9F743 	 push {r0,r1,r2,r4,r5,r6,r7,r8,r9,lr}
+  65 0004 00F58024 	 add r4,r0,#262144
+  66 0008 144E     	 ldr r6,.L18
+  67 000a DFF85880 	 ldr r8,.L18+8
+  68 000e 00F10805 	 add r5,r0,#8
+  69 0012 0834     	 adds r4,r4,#8
+  70 0014 4FF0FF37 	 mov r7,#-1
+  71              	.L13:
+  72 0018 01AB     	 add r3,sp,#4
+  73 001a 40F6F872 	 movw r2,#4088
+  74 001e B761     	 str r7,[r6,#24]
+  75 0020 2946     	 mov r1,r5
+  76 0022 4046     	 mov r0,r8
+  77 0024 FFF7FEFF 	 bl XMC_FCE_CalculateCRC32
+  78 0028 7368     	 ldr r3,[r6,#4]
+  79 002a 55F8042C 	 ldr r2,[r5,#-4]
+  80 002e 9A42     	 cmp r2,r3
+  81 0030 A5F10809 	 sub r9,r5,#8
+  82 0034 0AD1     	 bne .L11
+  83 0036 0A4A     	 ldr r2,.L18+4
+  84 0038 1368     	 ldr r3,[r2]
+  85 003a 2BB1     	 cbz r3,.L12
+  86 003c 1968     	 ldr r1,[r3]
+  87 003e 55F8083C 	 ldr r3,[r5,#-8]
+  88 0042 5B1A     	 subs r3,r3,r1
+  89 0044 002B     	 cmp r3,#0
+  90 0046 01DD     	 ble .L11
+  91              	.L12:
+  92 0048 C2F80090 	 str r9,[r2]
+  93              	.L11:
+  94 004c 05F58055 	 add r5,r5,#4096
+  95 0050 AC42     	 cmp r4,r5
+  96 0052 E1D1     	 bne .L13
+  97 0054 03B0     	 add sp,sp,#12
+  98              	 
+  99 0056 BDE8F083 	 pop {r4,r5,r6,r7,r8,r9,pc}
+ 100              	.L19:
+ 101 005a 00BF     	 .align 2
+ 102              	.L18:
+ 103 005c 20000250 	 .word 1342308384
+ 104 0060 00000000 	 .word .LANCHOR1
+ 105 0064 00000000 	 .word .LANCHOR0
+ 107              	 .section .text.EEP_init,"ax",%progbits
+ 108              	 .align 1
+ 109              	 .global EEP_init
+ 110              	 .syntax unified
+ 111              	 .thumb
+ 112              	 .thumb_func
+ 113              	 .fpu fpv4-sp-d16
+ 115              	EEP_init:
+ 116              	 
+ 117              	 
+ 118 0000 2DE9F341 	 push {r0,r1,r4,r5,r6,r7,r8,lr}
+ 119 0004 3D4C     	 ldr r4,.L25
+ 120 0006 3E48     	 ldr r0,.L25+4
+ 121 0008 3E4D     	 ldr r5,.L25+8
+ 122 000a 4FF48052 	 mov r2,#4096
+ 123 000e 0021     	 movs r1,#0
+ 124 0010 FFF7FEFF 	 bl memset
+ 125 0014 3C4A     	 ldr r2,.L25+12
+ 126 0016 0D21     	 movs r1,#13
+ 127 0018 2046     	 mov r0,r4
+ 128 001a FFF7FEFF 	 bl XMC_GPIO_Init
+ 129 001e 3B4A     	 ldr r2,.L25+16
+ 130 0020 3B48     	 ldr r0,.L25+20
+ 131 0022 0921     	 movs r1,#9
+ 132 0024 FFF7FEFF 	 bl XMC_GPIO_Init
+ 133 0028 FFF7FEFF 	 bl XMC_FCE_Enable
+ 134 002c 3948     	 ldr r0,.L25+24
+ 135 002e FFF7FEFF 	 bl XMC_FCE_Init
+ 136 0032 0023     	 movs r3,#0
+ 137 0034 2B60     	 str r3,[r5]
+ 138 0036 636A     	 ldr r3,[r4,#36]
+ 139 0038 9B04     	 lsls r3,r3,#18
+ 140 003a 05D4     	 bmi .L21
+ 141 003c 3648     	 ldr r0,.L25+28
+ 142 003e FFF7FEFF 	 bl find_latest_block
+ 143 0042 3648     	 ldr r0,.L25+32
+ 144 0044 FFF7FEFF 	 bl find_latest_block
+ 145              	.L21:
+ 146 0048 314F     	 ldr r7,.L25+20
+ 147 004a 2E68     	 ldr r6,[r5]
+ 148 004c 4FF40073 	 mov r3,#512
+ 149 0050 7B60     	 str r3,[r7,#4]
+ 150 0052 002E     	 cmp r6,#0
+ 151 0054 39D1     	 bne .L22
+ 152 0056 3048     	 ldr r0,.L25+28
+ 153 0058 DFF8E480 	 ldr r8,.L25+68
+ 154 005c FFF7FEFF 	 bl XMC_FLASH_EraseSector
+ 155 0060 2E48     	 ldr r0,.L25+32
+ 156 0062 FFF7FEFF 	 bl XMC_FLASH_EraseSector
+ 157 0066 2E49     	 ldr r1,.L25+36
+ 158 0068 2E4A     	 ldr r2,.L25+40
+ 159 006a 521A     	 subs r2,r2,r1
+ 160 006c B2F5786F 	 cmp r2,#3968
+ 161 0070 28BF     	 it cs
+ 162 0072 4FF47862 	 movcs r2,#3968
+ 163 0076 4046     	 mov r0,r8
+ 164 0078 FFF7FEFF 	 bl memcpy
+ 165 007c 08F8086C 	 strb r6,[r8,#-8]
+ 166 0080 08F8076C 	 strb r6,[r8,#-7]
+ 167 0084 08F8066C 	 strb r6,[r8,#-6]
+ 168 0088 08F8056C 	 strb r6,[r8,#-5]
+ 169 008c 264E     	 ldr r6,.L25+44
+ 170 008e 2148     	 ldr r0,.L25+24
+ 171 0090 4FF0FF33 	 mov r3,#-1
+ 172 0094 B361     	 str r3,[r6,#24]
+ 173 0096 4146     	 mov r1,r8
+ 174 0098 01AB     	 add r3,sp,#4
+ 175 009a 40F6F872 	 movw r2,#4088
+ 176 009e FFF7FEFF 	 bl XMC_FCE_CalculateCRC32
+ 177 00a2 7368     	 ldr r3,[r6,#4]
+ 178 00a4 48F8043C 	 str r3,[r8,#-4]
+ 179 00a8 A8F10804 	 sub r4,r8,#8
+ 180 00ac 1A4E     	 ldr r6,.L25+28
+ 181 00ae DFF89480 	 ldr r8,.L25+72
+ 182              	.L23:
+ 183 00b2 2146     	 mov r1,r4
+ 184 00b4 3046     	 mov r0,r6
+ 185 00b6 06F58076 	 add r6,r6,#256
+ 186 00ba FFF7FEFF 	 bl XMC_FLASH_ProgramPage
+ 187 00be 4645     	 cmp r6,r8
+ 188 00c0 04F58074 	 add r4,r4,#256
+ 189 00c4 F5D1     	 bne .L23
+ 190 00c6 144B     	 ldr r3,.L25+28
+ 191 00c8 2B60     	 str r3,[r5]
+ 192              	.L22:
+ 193 00ca 2868     	 ldr r0,[r5]
+ 194 00cc FFF7FEFF 	 bl cleanup_unused_sect
+ 195 00d0 2968     	 ldr r1,[r5]
+ 196 00d2 1648     	 ldr r0,.L25+48
+ 197 00d4 4FF47862 	 mov r2,#3968
+ 198 00d8 0831     	 adds r1,r1,#8
+ 199 00da FFF7FEFF 	 bl memcpy
+ 200 00de 144A     	 ldr r2,.L25+52
+ 201 00e0 4FF00073 	 mov r3,#33554432
+ 202 00e4 7B60     	 str r3,[r7,#4]
+ 203 00e6 0023     	 movs r3,#0
+ 204 00e8 1370     	 strb r3,[r2]
+ 205 00ea 124A     	 ldr r2,.L25+56
+ 206 00ec 1360     	 str r3,[r2]
+ 207 00ee 124A     	 ldr r2,.L25+60
+ 208 00f0 1370     	 strb r3,[r2]
+ 209 00f2 124A     	 ldr r2,.L25+64
+ 210 00f4 1360     	 str r3,[r2]
+ 211 00f6 02B0     	 add sp,sp,#8
+ 212              	 
+ 213 00f8 BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 214              	.L26:
+ 215              	 .align 2
+ 216              	.L25:
+ 217 00fc 008F0248 	 .word 1208127232
+ 218 0100 00000000 	 .word eep_write_buf
+ 219 0104 00000000 	 .word .LANCHOR1
+ 220 0108 00000000 	 .word .LANCHOR2
+ 221 010c 00000000 	 .word .LANCHOR3
+ 222 0110 00850248 	 .word 1208124672
+ 223 0114 00000000 	 .word .LANCHOR0
+ 224 0118 0000180C 	 .word 202899456
+ 225 011c 00001C0C 	 .word 203161600
+ 226 0120 00000000 	 .word _binary_sii_eeprom_bin_start
+ 227 0124 00000000 	 .word _binary_sii_eeprom_bin_end
+ 228 0128 20000250 	 .word 1342308384
+ 229 012c 00000000 	 .word .LANCHOR4
+ 230 0130 00000000 	 .word .LANCHOR5
+ 231 0134 00000000 	 .word .LANCHOR6
+ 232 0138 00000000 	 .word .LANCHOR7
+ 233 013c 00000000 	 .word .LANCHOR8
+ 234 0140 08000000 	 .word eep_write_buf+8
+ 235 0144 0010180C 	 .word 202903552
+ 237              	 .section .text.EEP_hw_process,"ax",%progbits
+ 238              	 .align 1
+ 239              	 .global EEP_hw_process
+ 240              	 .syntax unified
+ 241              	 .thumb
+ 242              	 .thumb_func
+ 243              	 .fpu fpv4-sp-d16
+ 245              	EEP_hw_process:
+ 246              	 
+ 247              	 
+ 248 0000 F7B5     	 push {r0,r1,r2,r4,r5,r6,r7,lr}
+ 249 0002 374A     	 ldr r2,.L41
+ 250 0004 1378     	 ldrb r3,[r2]
+ 251 0006 6BB1     	 cbz r3,.L28
+ 252 0008 364B     	 ldr r3,.L41+4
+ 253 000a 3749     	 ldr r1,.L41+8
+ 254 000c D3F8D830 	 ldr r3,[r3,#216]
+ 255 0010 0968     	 ldr r1,[r1]
+ 256 0012 5B1A     	 subs r3,r3,r1
+ 257 0014 3549     	 ldr r1,.L41+12
+ 258 0016 8B42     	 cmp r3,r1
+ 259 0018 04DD     	 ble .L28
+ 260 001a 0023     	 movs r3,#0
+ 261 001c 1370     	 strb r3,[r2]
+ 262 001e 344B     	 ldr r3,.L41+16
+ 263 0020 0122     	 movs r2,#1
+ 264 0022 1A70     	 strb r2,[r3]
+ 265              	.L28:
+ 266 0024 334C     	 ldr r4,.L41+20
+ 267 0026 2368     	 ldr r3,[r4]
+ 268 0028 2746     	 mov r7,r4
+ 269 002a F3B1     	 cbz r3,.L29
+ 270 002c 324E     	 ldr r6,.L41+24
+ 271 002e 334D     	 ldr r5,.L41+28
+ 272 0030 3168     	 ldr r1,[r6]
+ 273 0032 2868     	 ldr r0,[r5]
+ 274 0034 FFF7FEFF 	 bl XMC_FLASH_ProgramPage
+ 275 0038 3368     	 ldr r3,[r6]
+ 276 003a 314A     	 ldr r2,.L41+32
+ 277 003c 03F58073 	 add r3,r3,#256
+ 278 0040 3360     	 str r3,[r6]
+ 279 0042 2B68     	 ldr r3,[r5]
+ 280 0044 03F58073 	 add r3,r3,#256
+ 281 0048 2B60     	 str r3,[r5]
+ 282 004a 1368     	 ldr r3,[r2]
+ 283 004c 0133     	 adds r3,r3,#1
+ 284 004e 0F2B     	 cmp r3,#15
+ 285 0050 1360     	 str r3,[r2]
+ 286 0052 08D9     	 bls .L27
+ 287 0054 2B4B     	 ldr r3,.L41+36
+ 288 0056 2268     	 ldr r2,[r4]
+ 289 0058 1A60     	 str r2,[r3]
+ 290 005a 0023     	 movs r3,#0
+ 291 005c 2360     	 str r3,[r4]
+ 292 005e 2A4B     	 ldr r3,.L41+40
+ 293 0060 4FF00072 	 mov r2,#33554432
+ 294 0064 5A60     	 str r2,[r3,#4]
+ 295              	.L27:
+ 296 0066 03B0     	 add sp,sp,#12
+ 297              	 
+ 298 0068 F0BD     	 pop {r4,r5,r6,r7,pc}
+ 299              	.L29:
+ 300 006a 214C     	 ldr r4,.L41+16
+ 301 006c 2378     	 ldrb r3,[r4]
+ 302 006e 002B     	 cmp r3,#0
+ 303 0070 F9D0     	 beq .L27
+ 304 0072 244E     	 ldr r6,.L41+36
+ 305 0074 244B     	 ldr r3,.L41+40
+ 306 0076 3068     	 ldr r0,[r6]
+ 307 0078 4FF40072 	 mov r2,#512
+ 308 007c 5A60     	 str r2,[r3,#4]
+ 309 007e C0F31102 	 ubfx r2,r0,#0,#18
+ 310 0082 02F58052 	 add r2,r2,#4096
+ 311 0086 B2F5802F 	 cmp r2,#262144
+ 312 008a 26D2     	 bcs .L33
+ 313 008c 00F58050 	 add r0,r0,#4096
+ 314              	.L34:
+ 315 0090 1E4D     	 ldr r5,.L41+44
+ 316 0092 1F49     	 ldr r1,.L41+48
+ 317 0094 3860     	 str r0,[r7]
+ 318 0096 4FF47862 	 mov r2,#3968
+ 319 009a 05F10800 	 add r0,r5,#8
+ 320 009e FFF7FEFF 	 bl memcpy
+ 321 00a2 3368     	 ldr r3,[r6]
+ 322 00a4 1B4E     	 ldr r6,.L41+52
+ 323 00a6 1B68     	 ldr r3,[r3]
+ 324 00a8 1B48     	 ldr r0,.L41+56
+ 325 00aa 2946     	 mov r1,r5
+ 326 00ac 0133     	 adds r3,r3,#1
+ 327 00ae 41F8083B 	 str r3,[r1],#8
+ 328 00b2 4FF0FF33 	 mov r3,#-1
+ 329 00b6 B361     	 str r3,[r6,#24]
+ 330 00b8 40F6F872 	 movw r2,#4088
+ 331 00bc 01AB     	 add r3,sp,#4
+ 332 00be FFF7FEFF 	 bl XMC_FCE_CalculateCRC32
+ 333 00c2 7368     	 ldr r3,[r6,#4]
+ 334 00c4 6B60     	 str r3,[r5,#4]
+ 335 00c6 0C4B     	 ldr r3,.L41+24
+ 336 00c8 3A68     	 ldr r2,[r7]
+ 337 00ca 1D60     	 str r5,[r3]
+ 338 00cc 0B4B     	 ldr r3,.L41+28
+ 339 00ce 1A60     	 str r2,[r3]
+ 340 00d0 0B4A     	 ldr r2,.L41+32
+ 341 00d2 0023     	 movs r3,#0
+ 342 00d4 1360     	 str r3,[r2]
+ 343 00d6 2370     	 strb r3,[r4]
+ 344 00d8 C5E7     	 b .L27
+ 345              	.L33:
+ 346 00da FFF7FEFF 	 bl cleanup_unused_sect
+ 347 00de D7E7     	 b .L34
+ 348              	.L42:
+ 349              	 .align 2
+ 350              	.L41:
+ 351 00e0 00000000 	 .word .LANCHOR5
+ 352 00e4 00000000 	 .word ESCvar
+ 353 00e8 00000000 	 .word .LANCHOR6
+ 354 00ec 00E1F505 	 .word 100000000
+ 355 00f0 00000000 	 .word .LANCHOR7
+ 356 00f4 00000000 	 .word .LANCHOR8
+ 357 00f8 00000000 	 .word .LANCHOR9
+ 358 00fc 00000000 	 .word .LANCHOR10
+ 359 0100 00000000 	 .word .LANCHOR11
+ 360 0104 00000000 	 .word .LANCHOR1
+ 361 0108 00850248 	 .word 1208124672
+ 362 010c 00000000 	 .word eep_write_buf
+ 363 0110 00000000 	 .word .LANCHOR4
+ 364 0114 20000250 	 .word 1342308384
+ 365 0118 00000000 	 .word .LANCHOR0
+ 367              	 .section .text.EEP_read,"ax",%progbits
+ 368              	 .align 1
+ 369              	 .global EEP_read
+ 370              	 .syntax unified
+ 371              	 .thumb
+ 372              	 .thumb_func
+ 373              	 .fpu fpv4-sp-d16
+ 375              	EEP_read:
+ 376              	 
+ 377              	 
+ 378 0000 08B5     	 push {r3,lr}
+ 379 0002 0346     	 mov r3,r0
+ 380 0004 B3F5786F 	 cmp r3,#3968
+ 381 0008 0846     	 mov r0,r1
+ 382 000a 05D2     	 bcs .L45
+ 383 000c 0349     	 ldr r1,.L46
+ 384 000e 1944     	 add r1,r1,r3
+ 385 0010 FFF7FEFF 	 bl memcpy
+ 386 0014 0020     	 movs r0,#0
+ 387              	.L44:
+ 388 0016 08BD     	 pop {r3,pc}
+ 389              	.L45:
+ 390 0018 0120     	 movs r0,#1
+ 391 001a FCE7     	 b .L44
+ 392              	.L47:
+ 393              	 .align 2
+ 394              	.L46:
+ 395 001c 00000000 	 .word .LANCHOR4
+ 397              	 .section .text.EEP_write,"ax",%progbits
+ 398              	 .align 1
+ 399              	 .global EEP_write
+ 400              	 .syntax unified
+ 401              	 .thumb
+ 402              	 .thumb_func
+ 403              	 .fpu fpv4-sp-d16
+ 405              	EEP_write:
+ 406              	 
+ 407              	 
+ 408 0000 B0F5786F 	 cmp r0,#3968
+ 409 0004 08B5     	 push {r3,lr}
+ 410 0006 0FD2     	 bcs .L50
+ 411 0008 084B     	 ldr r3,.L51
+ 412 000a 1844     	 add r0,r0,r3
+ 413 000c FFF7FEFF 	 bl memcpy
+ 414 0010 074B     	 ldr r3,.L51+4
+ 415 0012 0122     	 movs r2,#1
+ 416 0014 1A70     	 strb r2,[r3]
+ 417 0016 074B     	 ldr r3,.L51+8
+ 418 0018 0020     	 movs r0,#0
+ 419 001a 1870     	 strb r0,[r3]
+ 420 001c 064B     	 ldr r3,.L51+12
+ 421 001e D3F8D820 	 ldr r2,[r3,#216]
+ 422 0022 064B     	 ldr r3,.L51+16
+ 423 0024 1A60     	 str r2,[r3]
+ 424              	.L49:
+ 425 0026 08BD     	 pop {r3,pc}
+ 426              	.L50:
+ 427 0028 0120     	 movs r0,#1
+ 428 002a FCE7     	 b .L49
+ 429              	.L52:
+ 430              	 .align 2
+ 431              	.L51:
+ 432 002c 00000000 	 .word .LANCHOR4
+ 433 0030 00000000 	 .word .LANCHOR5
+ 434 0034 00000000 	 .word .LANCHOR7
+ 435 0038 00000000 	 .word ESCvar
+ 436 003c 00000000 	 .word .LANCHOR6
+ 438              	 .section .bss.eep_buf,"aw",%nobits
+ 439              	 .set .LANCHOR4,.+0
+ 442              	eep_buf:
+ 443 0000 00000000 	 .space 3968
+ 443      00000000 
+ 443      00000000 
+ 443      00000000 
+ 443      00000000 
+ 444              	 .section .bss.eep_buf_dirty,"aw",%nobits
+ 445              	 .set .LANCHOR5,.+0
+ 448              	eep_buf_dirty:
+ 449 0000 00       	 .space 1
+ 450              	 .section .bss.eep_curr_block,"aw",%nobits
+ 451              	 .align 2
+ 452              	 .set .LANCHOR1,.+0
+ 455              	eep_curr_block:
+ 456 0000 00000000 	 .space 4
+ 457              	 .section .bss.eep_last_write,"aw",%nobits
+ 458              	 .align 2
+ 459              	 .set .LANCHOR6,.+0
+ 462              	eep_last_write:
+ 463 0000 00000000 	 .space 4
+ 464              	 .section .bss.eep_next_block,"aw",%nobits
+ 465              	 .align 2
+ 466              	 .set .LANCHOR8,.+0
+ 469              	eep_next_block:
+ 470 0000 00000000 	 .space 4
+ 471              	 .section .bss.eep_write_buf,"aw",%nobits
+ 474              	eep_write_buf:
+ 475 0000 00000000 	 .space 4096
+ 475      00000000 
+ 475      00000000 
+ 475      00000000 
+ 475      00000000 
+ 476              	 .section .bss.eep_write_dst,"aw",%nobits
+ 477              	 .align 2
+ 478              	 .set .LANCHOR10,.+0
+ 481              	eep_write_dst:
+ 482 0000 00000000 	 .space 4
+ 483              	 .section .bss.eep_write_page,"aw",%nobits
+ 484              	 .align 2
+ 485              	 .set .LANCHOR11,.+0
+ 488              	eep_write_page:
+ 489 0000 00000000 	 .space 4
+ 490              	 .section .bss.eep_write_req,"aw",%nobits
+ 491              	 .set .LANCHOR7,.+0
+ 494              	eep_write_req:
+ 495 0000 00       	 .space 1
+ 496              	 .section .bss.eep_write_src,"aw",%nobits
+ 497              	 .align 2
+ 498              	 .set .LANCHOR9,.+0
+ 501              	eep_write_src:
+ 502 0000 00000000 	 .space 4
+ 503              	 .section .rodata.fce_config,"a"
+ 504              	 .align 2
+ 505              	 .set .LANCHOR0,.+0
+ 508              	fce_config:
+ 509 0000 20000250 	 .word 1342308384
+ 510 0004 00       	 .space 1
+ 511 0005 00       	 .byte 0
+ 512 0006 0000     	 .space 2
+ 513 0008 00000000 	 .word 0
+ 514              	 .section .rodata.gpio_config_btn,"a"
+ 515              	 .align 2
+ 516              	 .set .LANCHOR2,.+0
+ 519              	gpio_config_btn:
+ 520 0000 30       	 .byte 48
+ 521 0001 000000   	 .space 3
+ 522 0004 00000000 	 .word 0
+ 523 0008 00       	 .byte 0
+ 524 0009 000000   	 .space 3
+ 525              	 .section .rodata.gpio_config_led,"a"
+ 526              	 .align 2
+ 527              	 .set .LANCHOR3,.+0
+ 530              	gpio_config_led:
+ 531 0000 80       	 .byte -128
+ 532 0001 000000   	 .space 3
+ 533 0004 00000100 	 .word 65536
+ 534 0008 02       	 .byte 2
+ 535 0009 000000   	 .space 3
+ 536              	 .ident "GCC: (15:9-2019-q4-0ubuntu1) 9.2.1 20191025 (release) [ARM/arm-9-branch revision 277599]"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 esc_hw_eep.c
+    {standard input}:15     .text.cleanup_unused_sect:0000000000000000 $t
+    {standard input}:22     .text.cleanup_unused_sect:0000000000000000 cleanup_unused_sect
+    {standard input}:51     .text.cleanup_unused_sect:0000000000000030 $d
+    {standard input}:55     .text.find_latest_block:0000000000000000 $t
+    {standard input}:61     .text.find_latest_block:0000000000000000 find_latest_block
+    {standard input}:103    .text.find_latest_block:000000000000005c $d
+    {standard input}:108    .text.EEP_init:0000000000000000 $t
+    {standard input}:115    .text.EEP_init:0000000000000000 EEP_init
+    {standard input}:217    .text.EEP_init:00000000000000fc $d
+    {standard input}:474    .bss.eep_write_buf:0000000000000000 eep_write_buf
+    {standard input}:238    .text.EEP_hw_process:0000000000000000 $t
+    {standard input}:245    .text.EEP_hw_process:0000000000000000 EEP_hw_process
+    {standard input}:351    .text.EEP_hw_process:00000000000000e0 $d
+    {standard input}:368    .text.EEP_read:0000000000000000 $t
+    {standard input}:375    .text.EEP_read:0000000000000000 EEP_read
+    {standard input}:395    .text.EEP_read:000000000000001c $d
+    {standard input}:398    .text.EEP_write:0000000000000000 $t
+    {standard input}:405    .text.EEP_write:0000000000000000 EEP_write
+    {standard input}:432    .text.EEP_write:000000000000002c $d
+    {standard input}:442    .bss.eep_buf:0000000000000000 eep_buf
+    {standard input}:443    .bss.eep_buf:0000000000000000 $d
+    {standard input}:448    .bss.eep_buf_dirty:0000000000000000 eep_buf_dirty
+    {standard input}:449    .bss.eep_buf_dirty:0000000000000000 $d
+    {standard input}:451    .bss.eep_curr_block:0000000000000000 $d
+    {standard input}:455    .bss.eep_curr_block:0000000000000000 eep_curr_block
+    {standard input}:458    .bss.eep_last_write:0000000000000000 $d
+    {standard input}:462    .bss.eep_last_write:0000000000000000 eep_last_write
+    {standard input}:465    .bss.eep_next_block:0000000000000000 $d
+    {standard input}:469    .bss.eep_next_block:0000000000000000 eep_next_block
+    {standard input}:475    .bss.eep_write_buf:0000000000000000 $d
+    {standard input}:477    .bss.eep_write_dst:0000000000000000 $d
+    {standard input}:481    .bss.eep_write_dst:0000000000000000 eep_write_dst
+    {standard input}:484    .bss.eep_write_page:0000000000000000 $d
+    {standard input}:488    .bss.eep_write_page:0000000000000000 eep_write_page
+    {standard input}:494    .bss.eep_write_req:0000000000000000 eep_write_req
+    {standard input}:495    .bss.eep_write_req:0000000000000000 $d
+    {standard input}:497    .bss.eep_write_src:0000000000000000 $d
+    {standard input}:501    .bss.eep_write_src:0000000000000000 eep_write_src
+    {standard input}:504    .rodata.fce_config:0000000000000000 $d
+    {standard input}:508    .rodata.fce_config:0000000000000000 fce_config
+    {standard input}:515    .rodata.gpio_config_btn:0000000000000000 $d
+    {standard input}:519    .rodata.gpio_config_btn:0000000000000000 gpio_config_btn
+    {standard input}:526    .rodata.gpio_config_led:0000000000000000 $d
+    {standard input}:530    .rodata.gpio_config_led:0000000000000000 gpio_config_led
+
+UNDEFINED SYMBOLS
+XMC_FLASH_EraseSector
+XMC_FCE_CalculateCRC32
+memset
+XMC_GPIO_Init
+XMC_FCE_Enable
+XMC_FCE_Init
+memcpy
+XMC_FLASH_ProgramPage
+_binary_sii_eeprom_bin_start
+_binary_sii_eeprom_bin_end
+ESCvar

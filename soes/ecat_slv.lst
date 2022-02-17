@@ -1,0 +1,570 @@
+   1              	 .cpu cortex-m4
+   2              	 .eabi_attribute 27,1
+   3              	 .eabi_attribute 20,1
+   4              	 .eabi_attribute 21,1
+   5              	 .eabi_attribute 23,3
+   6              	 .eabi_attribute 24,1
+   7              	 .eabi_attribute 25,1
+   8              	 .eabi_attribute 26,1
+   9              	 .eabi_attribute 30,4
+  10              	 .eabi_attribute 34,1
+  11              	 .eabi_attribute 18,4
+  12              	 .file "ecat_slv.c"
+  13              	 .text
+  14              	 .section .text.ESC_download_pre_objecthandler,"ax",%progbits
+  15              	 .align 1
+  16              	 .global ESC_download_pre_objecthandler
+  17              	 .arch armv7e-m
+  18              	 .syntax unified
+  19              	 .thumb
+  20              	 .thumb_func
+  21              	 .fpu fpv4-sp-d16
+  23              	ESC_download_pre_objecthandler:
+  24              	 
+  25              	 
+  26 0000 F7B5     	 push {r0,r1,r2,r4,r5,r6,r7,lr}
+  27 0002 0E46     	 mov r6,r1
+  28 0004 A0F5B051 	 sub r1,r0,#5632
+  29 0008 B1F5007F 	 cmp r1,#512
+  30 000c BDF82070 	 ldrh r7,[sp,#32]
+  31 0010 0446     	 mov r4,r0
+  32 0012 0FD3     	 bcc .L2
+  33 0014 A0F5D051 	 sub r1,r0,#6656
+  34 0018 B1F5007F 	 cmp r1,#512
+  35 001c 0AD3     	 bcc .L2
+  36 001e A0F5E051 	 sub r1,r0,#7168
+  37 0022 1239     	 subs r1,r1,#18
+  38 0024 0129     	 cmp r1,#1
+  39 0026 05D9     	 bls .L2
+  40              	.L5:
+  41 0028 0D49     	 ldr r1,.L7
+  42 002a CD6B     	 ldr r5,[r1,#60]
+  43 002c 85B9     	 cbnz r5,.L3
+  44 002e 2846     	 mov r0,r5
+  45              	.L1:
+  46 0030 03B0     	 add sp,sp,#12
+  47              	 
+  48 0032 F0BD     	 pop {r4,r5,r6,r7,pc}
+  49              	.L2:
+  50 0034 B6EBD73F 	 cmp r6,r7,lsr#15
+  51 0038 F6D9     	 bls .L5
+  52 003a 2046     	 mov r0,r4
+  53 003c CDE90023 	 strd r2,r3,[sp]
+  54 0040 FFF7FEFF 	 bl COE_maxSub
+  55 0044 DDE90023 	 ldrd r2,r3,[sp]
+  56 0048 0028     	 cmp r0,#0
+  57 004a EDD0     	 beq .L5
+  58 004c 0548     	 ldr r0,.L7+4
+  59 004e EFE7     	 b .L1
+  60              	.L3:
+  61 0050 3146     	 mov r1,r6
+  62 0052 2046     	 mov r0,r4
+  63 0054 AC46     	 mov ip,r5
+  64 0056 0897     	 str r7,[sp,#32]
+  65 0058 03B0     	 add sp,sp,#12
+  66              	 
+  67 005a BDE8F040 	 pop {r4,r5,r6,r7,lr}
+  68 005e 6047     	 bx ip
+  69              	.L8:
+  70              	 .align 2
+  71              	.L7:
+  72 0060 00000000 	 .word ESCvar
+  73 0064 03000106 	 .word 100728835
+  75              	 .section .text.ESC_download_post_objecthandler,"ax",%progbits
+  76              	 .align 1
+  77              	 .global ESC_download_post_objecthandler
+  78              	 .syntax unified
+  79              	 .thumb
+  80              	 .thumb_func
+  81              	 .fpu fpv4-sp-d16
+  83              	ESC_download_post_objecthandler:
+  84              	 
+  85              	 
+  86              	 
+  87 0000 024B     	 ldr r3,.L11
+  88 0002 1B6C     	 ldr r3,[r3,#64]
+  89 0004 03B1     	 cbz r3,.L10
+  90 0006 1847     	 bx r3
+  91              	.L10:
+  92 0008 1846     	 mov r0,r3
+  93 000a 7047     	 bx lr
+  94              	.L12:
+  95              	 .align 2
+  96              	.L11:
+  97 000c 00000000 	 .word ESCvar
+  99              	 .section .text.ESC_upload_pre_objecthandler,"ax",%progbits
+ 100              	 .align 1
+ 101              	 .global ESC_upload_pre_objecthandler
+ 102              	 .syntax unified
+ 103              	 .thumb
+ 104              	 .thumb_func
+ 105              	 .fpu fpv4-sp-d16
+ 107              	ESC_upload_pre_objecthandler:
+ 108              	 
+ 109              	 
+ 110              	 
+ 111 0000 30B4     	 push {r4,r5}
+ 112 0002 064C     	 ldr r4,.L15
+ 113 0004 BDF80850 	 ldrh r5,[sp,#8]
+ 114 0008 646C     	 ldr r4,[r4,#68]
+ 115 000a 1CB1     	 cbz r4,.L14
+ 116 000c 0295     	 str r5,[sp,#8]
+ 117 000e A446     	 mov ip,r4
+ 118 0010 30BC     	 pop {r4,r5}
+ 119 0012 6047     	 bx ip
+ 120              	.L14:
+ 121 0014 2046     	 mov r0,r4
+ 122 0016 30BC     	 pop {r4,r5}
+ 123 0018 7047     	 bx lr
+ 124              	.L16:
+ 125 001a 00BF     	 .align 2
+ 126              	.L15:
+ 127 001c 00000000 	 .word ESCvar
+ 129              	 .section .text.ESC_upload_post_objecthandler,"ax",%progbits
+ 130              	 .align 1
+ 131              	 .global ESC_upload_post_objecthandler
+ 132              	 .syntax unified
+ 133              	 .thumb
+ 134              	 .thumb_func
+ 135              	 .fpu fpv4-sp-d16
+ 137              	ESC_upload_post_objecthandler:
+ 138              	 
+ 139              	 
+ 140              	 
+ 141 0000 024B     	 ldr r3,.L19
+ 142 0002 9B6C     	 ldr r3,[r3,#72]
+ 143 0004 03B1     	 cbz r3,.L18
+ 144 0006 1847     	 bx r3
+ 145              	.L18:
+ 146 0008 1846     	 mov r0,r3
+ 147 000a 7047     	 bx lr
+ 148              	.L20:
+ 149              	 .align 2
+ 150              	.L19:
+ 151 000c 00000000 	 .word ESCvar
+ 153              	 .section .text.APP_safeoutput,"ax",%progbits
+ 154              	 .align 1
+ 155              	 .global APP_safeoutput
+ 156              	 .syntax unified
+ 157              	 .thumb
+ 158              	 .thumb_func
+ 159              	 .fpu fpv4-sp-d16
+ 161              	APP_safeoutput:
+ 162              	 
+ 163              	 
+ 164              	 
+ 165 0000 024B     	 ldr r3,.L23
+ 166 0002 9B6B     	 ldr r3,[r3,#56]
+ 167 0004 03B1     	 cbz r3,.L21
+ 168 0006 1847     	 bx r3
+ 169              	.L21:
+ 170 0008 7047     	 bx lr
+ 171              	.L24:
+ 172 000a 00BF     	 .align 2
+ 173              	.L23:
+ 174 000c 00000000 	 .word ESCvar
+ 176              	 .section .text.TXPDO_update,"ax",%progbits
+ 177              	 .align 1
+ 178              	 .global TXPDO_update
+ 179              	 .syntax unified
+ 180              	 .thumb
+ 181              	 .thumb_func
+ 182              	 .fpu fpv4-sp-d16
+ 184              	TXPDO_update:
+ 185              	 
+ 186              	 
+ 187              	 
+ 188 0000 054B     	 ldr r3,.L27
+ 189 0002 1A6D     	 ldr r2,[r3,#80]
+ 190 0004 02B1     	 cbz r2,.L26
+ 191 0006 1047     	 bx r2
+ 192              	.L26:
+ 193 0008 B3F87620 	 ldrh r2,[r3,#118]
+ 194 000c 034B     	 ldr r3,.L27+4
+ 195 000e 4FF48C50 	 mov r0,#4480
+ 196 0012 1968     	 ldr r1,[r3]
+ 197 0014 FFF7FEBF 	 b ESC_write
+ 198              	.L28:
+ 199              	 .align 2
+ 200              	.L27:
+ 201 0018 00000000 	 .word ESCvar
+ 202 001c 00000000 	 .word txpdo
+ 204              	 .section .text.RXPDO_update,"ax",%progbits
+ 205              	 .align 1
+ 206              	 .global RXPDO_update
+ 207              	 .syntax unified
+ 208              	 .thumb
+ 209              	 .thumb_func
+ 210              	 .fpu fpv4-sp-d16
+ 212              	RXPDO_update:
+ 213              	 
+ 214              	 
+ 215              	 
+ 216 0000 054B     	 ldr r3,.L31
+ 217 0002 DA6C     	 ldr r2,[r3,#76]
+ 218 0004 02B1     	 cbz r2,.L30
+ 219 0006 1047     	 bx r2
+ 220              	.L30:
+ 221 0008 B3F87420 	 ldrh r2,[r3,#116]
+ 222 000c 034B     	 ldr r3,.L31+4
+ 223 000e 4FF48850 	 mov r0,#4352
+ 224 0012 1968     	 ldr r1,[r3]
+ 225 0014 FFF7FEBF 	 b ESC_read
+ 226              	.L32:
+ 227              	 .align 2
+ 228              	.L31:
+ 229 0018 00000000 	 .word ESCvar
+ 230 001c 00000000 	 .word rxpdo
+ 232              	 .section .text.APP_setwatchdog,"ax",%progbits
+ 233              	 .align 1
+ 234              	 .global APP_setwatchdog
+ 235              	 .syntax unified
+ 236              	 .thumb
+ 237              	 .thumb_func
+ 238              	 .fpu fpv4-sp-d16
+ 240              	APP_setwatchdog:
+ 241              	 
+ 242              	 
+ 243              	 
+ 244 0000 034B     	 ldr r3,.L34
+ 245 0002 BFF35B8F 	 dmb ish
+ 246 0006 1860     	 str r0,[r3]
+ 247 0008 BFF35B8F 	 dmb ish
+ 248 000c 7047     	 bx lr
+ 249              	.L35:
+ 250 000e 00BF     	 .align 2
+ 251              	.L34:
+ 252 0010 D4000000 	 .word ESCvar+212
+ 254              	 .section .text.DIG_process,"ax",%progbits
+ 255              	 .align 1
+ 256              	 .global DIG_process
+ 257              	 .syntax unified
+ 258              	 .thumb
+ 259              	 .thumb_func
+ 260              	 .fpu fpv4-sp-d16
+ 262              	DIG_process:
+ 263              	 
+ 264              	 
+ 265 0000 38B5     	 push {r3,r4,r5,lr}
+ 266 0002 4507     	 lsls r5,r0,#29
+ 267 0004 0446     	 mov r4,r0
+ 268 0006 25D5     	 bpl .L38
+ 269 0008 BFF35B8F 	 dmb ish
+ 270 000c 354B     	 ldr r3,.L72
+ 271 000e 1A68     	 ldr r2,[r3]
+ 272 0010 BFF35B8F 	 dmb ish
+ 273 0014 002A     	 cmp r2,#0
+ 274 0016 0ADD     	 ble .L39
+ 275 0018 BFF35B8F 	 dmb ish
+ 276              	.L71:
+ 277 001c 53E8002F 	 ldrex r2,[r3]
+ 278 0020 013A     	 subs r2,r2,#1
+ 279 0022 43E80021 	 strex r1,r2,[r3]
+ 280 0026 0029     	 cmp r1,#0
+ 281 0028 F8D1     	 bne .L71
+ 282 002a BFF35B8F 	 dmb ish
+ 283              	.L39:
+ 284 002e BFF35B8F 	 dmb ish
+ 285 0032 1A68     	 ldr r2,[r3]
+ 286 0034 BFF35B8F 	 dmb ish
+ 287 0038 002A     	 cmp r2,#0
+ 288 003a 2B4A     	 ldr r2,.L72+4
+ 289 003c 3ADC     	 bgt .L40
+ 290 003e BFF35B8F 	 dmb ish
+ 291 0042 1178     	 ldrb r1,[r2]
+ 292 0044 BFF35B8F 	 dmb ish
+ 293 0048 8807     	 lsls r0,r1,#30
+ 294 004a 33D5     	 bpl .L40
+ 295 004c 1B21     	 movs r1,#27
+ 296 004e 1420     	 movs r0,#20
+ 297 0050 FFF7FEFF 	 bl ESC_ALstatusgotoerror
+ 298              	.L38:
+ 299 0054 A207     	 lsls r2,r4,#30
+ 300 0056 18D5     	 bpl .L43
+ 301 0058 BFF35B8F 	 dmb ish
+ 302 005c 224D     	 ldr r5,.L72+4
+ 303 005e 15F8DF39 	 ldrb r3,[r5],#-223
+ 304 0062 BFF35B8F 	 dmb ish
+ 305 0066 9B07     	 lsls r3,r3,#30
+ 306 0068 34D5     	 bpl .L44
+ 307 006a B5F8DC30 	 ldrh r3,[r5,#220]
+ 308 006e 5805     	 lsls r0,r3,#21
+ 309 0070 30D5     	 bpl .L44
+ 310 0072 FFF7FEFF 	 bl RXPDO_update
+ 311 0076 1B4B     	 ldr r3,.L72
+ 312 0078 D5F8D420 	 ldr r2,[r5,#212]
+ 313 007c BFF35B8F 	 dmb ish
+ 314 0080 1A60     	 str r2,[r3]
+ 315 0082 BFF35B8F 	 dmb ish
+ 316 0086 FFF7FEFF 	 bl cb_set_outputs
+ 317              	.L43:
+ 318 008a 2207     	 lsls r2,r4,#28
+ 319 008c 03D5     	 bpl .L46
+ 320 008e 174B     	 ldr r3,.L72+8
+ 321 0090 5B6B     	 ldr r3,[r3,#52]
+ 322 0092 03B1     	 cbz r3,.L46
+ 323 0094 9847     	 blx r3
+ 324              	.L46:
+ 325 0096 E307     	 lsls r3,r4,#31
+ 326 0098 23D5     	 bpl .L36
+ 327 009a BFF35B8F 	 dmb ish
+ 328 009e 124B     	 ldr r3,.L72+4
+ 329 00a0 1B78     	 ldrb r3,[r3]
+ 330 00a2 BFF35B8F 	 dmb ish
+ 331 00a6 E3B1     	 cbz r3,.L36
+ 332 00a8 FFF7FEFF 	 bl cb_get_inputs
+ 333 00ac BDE83840 	 pop {r3,r4,r5,lr}
+ 334 00b0 FFF7FEBF 	 b TXPDO_update
+ 335              	.L40:
+ 336 00b4 BFF35B8F 	 dmb ish
+ 337 00b8 1278     	 ldrb r2,[r2]
+ 338 00ba BFF35B8F 	 dmb ish
+ 339 00be 9107     	 lsls r1,r2,#30
+ 340 00c0 C8D4     	 bmi .L38
+ 341 00c2 0A4A     	 ldr r2,.L72+8
+ 342 00c4 D2F8D420 	 ldr r2,[r2,#212]
+ 343 00c8 BFF35B8F 	 dmb ish
+ 344 00cc 1A60     	 str r2,[r3]
+ 345 00ce BFF35B8F 	 dmb ish
+ 346 00d2 BFE7     	 b .L38
+ 347              	.L44:
+ 348 00d4 B5F8DC30 	 ldrh r3,[r5,#220]
+ 349 00d8 5905     	 lsls r1,r3,#21
+ 350 00da D6D5     	 bpl .L43
+ 351 00dc FFF7FEFF 	 bl RXPDO_update
+ 352 00e0 D3E7     	 b .L43
+ 353              	.L36:
+ 354 00e2 38BD     	 pop {r3,r4,r5,pc}
+ 355              	.L73:
+ 356              	 .align 2
+ 357              	.L72:
+ 358 00e4 00000000 	 .word .LANCHOR0
+ 359 00e8 DF000000 	 .word ESCvar+223
+ 360 00ec 00000000 	 .word ESCvar
+ 362              	 .section .text.ecat_slv_worker,"ax",%progbits
+ 363              	 .align 1
+ 364              	 .global ecat_slv_worker
+ 365              	 .syntax unified
+ 366              	 .thumb
+ 367              	 .thumb_func
+ 368              	 .fpu fpv4-sp-d16
+ 370              	ecat_slv_worker:
+ 371              	 
+ 372              	 
+ 373 0000 F8B5     	 push {r3,r4,r5,r6,r7,lr}
+ 374 0002 164D     	 ldr r5,.L83
+ 375 0004 0446     	 mov r4,r0
+ 376 0006 2E46     	 mov r6,r5
+ 377 0008 05F1DC07 	 add r7,r5,#220
+ 378              	.L78:
+ 379 000c FFF7FEFF 	 bl ESC_state
+ 380 0010 FFF7FEFF 	 bl ESC_sm_act_event
+ 381              	.L75:
+ 382 0014 FFF7FEFF 	 bl ESC_mbxprocess
+ 383 0018 95F88B30 	 ldrb r3,[r5,#139]
+ 384 001c 1843     	 orrs r0,r0,r3
+ 385 001e 10F0FF0F 	 tst r0,#255
+ 386 0022 15D1     	 bne .L76
+ 387 0024 EB6D     	 ldr r3,[r5,#92]
+ 388 0026 03B1     	 cbz r3,.L77
+ 389 0028 9847     	 blx r3
+ 390              	.L77:
+ 391 002a FFF7FEFF 	 bl ESC_ALeventread
+ 392 002e BFF35B8F 	 dmb ish
+ 393 0032 3880     	 strh r0,[r7]
+ 394 0034 BFF35B8F 	 dmb ish
+ 395 0038 B6F8DC30 	 ldrh r3,[r6,#220]
+ 396 003c 9BB2     	 uxth r3,r3
+ 397 003e 2342     	 tst r3,r4
+ 398 0040 E4D1     	 bne .L78
+ 399 0042 FFF7FEFF 	 bl ESC_ALeventmaskread
+ 400 0046 2043     	 orrs r0,r0,r4
+ 401 0048 BDE8F840 	 pop {r3,r4,r5,r6,r7,lr}
+ 402 004c FFF7FEBF 	 b ESC_ALeventmaskwrite
+ 403              	.L76:
+ 404 0050 FFF7FEFF 	 bl ESC_coeprocess
+ 405 0054 FFF7FEFF 	 bl ESC_xoeprocess
+ 406 0058 DCE7     	 b .L75
+ 407              	.L84:
+ 408 005a 00BF     	 .align 2
+ 409              	.L83:
+ 410 005c 00000000 	 .word ESCvar
+ 412              	 .section .text.ecat_slv_poll,"ax",%progbits
+ 413              	 .align 1
+ 414              	 .global ecat_slv_poll
+ 415              	 .syntax unified
+ 416              	 .thumb
+ 417              	 .thumb_func
+ 418              	 .fpu fpv4-sp-d16
+ 420              	ecat_slv_poll:
+ 421              	 
+ 422              	 
+ 423 0000 10B5     	 push {r4,lr}
+ 424 0002 0E4C     	 ldr r4,.L91
+ 425 0004 0E49     	 ldr r1,.L91+4
+ 426 0006 0422     	 movs r2,#4
+ 427 0008 4FF41160 	 mov r0,#2320
+ 428 000c FFF7FEFF 	 bl ESC_read
+ 429 0010 D4F8D830 	 ldr r3,[r4,#216]
+ 430 0014 C4F8D830 	 str r3,[r4,#216]
+ 431 0018 FFF7FEFF 	 bl ESC_state
+ 432 001c FFF7FEFF 	 bl ESC_sm_act_event
+ 433 0020 FFF7FEFF 	 bl ESC_mbxprocess
+ 434 0024 18B1     	 cbz r0,.L86
+ 435 0026 FFF7FEFF 	 bl ESC_coeprocess
+ 436 002a FFF7FEFF 	 bl ESC_xoeprocess
+ 437              	.L86:
+ 438 002e E36D     	 ldr r3,[r4,#92]
+ 439 0030 13B1     	 cbz r3,.L85
+ 440 0032 BDE81040 	 pop {r4,lr}
+ 441 0036 1847     	 bx r3
+ 442              	.L85:
+ 443 0038 10BD     	 pop {r4,pc}
+ 444              	.L92:
+ 445 003a 00BF     	 .align 2
+ 446              	.L91:
+ 447 003c 00000000 	 .word ESCvar
+ 448 0040 D8000000 	 .word ESCvar+216
+ 450              	 .section .text.ecat_slv,"ax",%progbits
+ 451              	 .align 1
+ 452              	 .global ecat_slv
+ 453              	 .syntax unified
+ 454              	 .thumb
+ 455              	 .thumb_func
+ 456              	 .fpu fpv4-sp-d16
+ 458              	ecat_slv:
+ 459              	 
+ 460              	 
+ 461 0000 08B5     	 push {r3,lr}
+ 462 0002 FFF7FEFF 	 bl ecat_slv_poll
+ 463 0006 BDE80840 	 pop {r3,lr}
+ 464 000a 0F20     	 movs r0,#15
+ 465 000c FFF7FEBF 	 b DIG_process
+ 467              	 .section .text.ecat_slv_init,"ax",%progbits
+ 468              	 .align 1
+ 469              	 .global ecat_slv_init
+ 470              	 .syntax unified
+ 471              	 .thumb
+ 472              	 .thumb_func
+ 473              	 .fpu fpv4-sp-d16
+ 475              	ecat_slv_init:
+ 476              	 
+ 477              	 
+ 478 0000 38B5     	 push {r3,r4,r5,lr}
+ 479 0002 134B     	 ldr r3,.L97
+ 480 0004 8268     	 ldr r2,[r0,#8]
+ 481 0006 1A60     	 str r2,[r3]
+ 482 0008 0446     	 mov r4,r0
+ 483 000a FFF7FEFF 	 bl ESC_config
+ 484 000e 2046     	 mov r0,r4
+ 485 0010 FFF7FEFF 	 bl ESC_init
+ 486 0014 0F4C     	 ldr r4,.L97+4
+ 487 0016 04F18205 	 add r5,r4,#130
+ 488              	.L95:
+ 489 001a B4F88230 	 ldrh r3,[r4,#130]
+ 490 001e DB07     	 lsls r3,r3,#31
+ 491 0020 0FD5     	 bpl .L96
+ 492 0022 0120     	 movs r0,#1
+ 493 0024 FFF7FEFF 	 bl ESC_ALstatus
+ 494 0028 0020     	 movs r0,#0
+ 495 002a FFF7FEFF 	 bl ESC_ALerror
+ 496 002e FFF7FEFF 	 bl ESC_stopmbx
+ 497 0032 FFF7FEFF 	 bl ESC_stopinput
+ 498 0036 FFF7FEFF 	 bl ESC_stopoutput
+ 499 003a BDE83840 	 pop {r3,r4,r5,lr}
+ 500 003e FFF7FEBF 	 b COE_initDefaultValues
+ 501              	.L96:
+ 502 0042 0222     	 movs r2,#2
+ 503 0044 2946     	 mov r1,r5
+ 504 0046 4FF48870 	 mov r0,#272
+ 505 004a FFF7FEFF 	 bl ESC_read
+ 506 004e E4E7     	 b .L95
+ 507              	.L98:
+ 508              	 .align 2
+ 509              	.L97:
+ 510 0050 00000000 	 .word .LANCHOR0
+ 511 0054 00000000 	 .word ESCvar
+ 513              	 .comm ESCvar,608,4
+ 514              	 .comm SMmap3,0,4
+ 515              	 .comm SMmap2,0,4
+ 516              	 .comm MBXcontrol,3,1
+ 517              	 .comm MBX,384,1
+ 518              	 .section .bss.watchdog,"aw",%nobits
+ 519              	 .align 2
+ 520              	 .set .LANCHOR0,.+0
+ 523              	watchdog:
+ 524 0000 00000000 	 .space 4
+ 525              	 .ident "GCC: (15:9-2019-q4-0ubuntu1) 9.2.1 20191025 (release) [ARM/arm-9-branch revision 277599]"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ecat_slv.c
+    {standard input}:15     .text.ESC_download_pre_objecthandler:0000000000000000 $t
+    {standard input}:23     .text.ESC_download_pre_objecthandler:0000000000000000 ESC_download_pre_objecthandler
+    {standard input}:72     .text.ESC_download_pre_objecthandler:0000000000000060 $d
+                            *COM*:0000000000000260 ESCvar
+    {standard input}:76     .text.ESC_download_post_objecthandler:0000000000000000 $t
+    {standard input}:83     .text.ESC_download_post_objecthandler:0000000000000000 ESC_download_post_objecthandler
+    {standard input}:97     .text.ESC_download_post_objecthandler:000000000000000c $d
+    {standard input}:100    .text.ESC_upload_pre_objecthandler:0000000000000000 $t
+    {standard input}:107    .text.ESC_upload_pre_objecthandler:0000000000000000 ESC_upload_pre_objecthandler
+    {standard input}:127    .text.ESC_upload_pre_objecthandler:000000000000001c $d
+    {standard input}:130    .text.ESC_upload_post_objecthandler:0000000000000000 $t
+    {standard input}:137    .text.ESC_upload_post_objecthandler:0000000000000000 ESC_upload_post_objecthandler
+    {standard input}:151    .text.ESC_upload_post_objecthandler:000000000000000c $d
+    {standard input}:154    .text.APP_safeoutput:0000000000000000 $t
+    {standard input}:161    .text.APP_safeoutput:0000000000000000 APP_safeoutput
+    {standard input}:174    .text.APP_safeoutput:000000000000000c $d
+    {standard input}:177    .text.TXPDO_update:0000000000000000 $t
+    {standard input}:184    .text.TXPDO_update:0000000000000000 TXPDO_update
+    {standard input}:201    .text.TXPDO_update:0000000000000018 $d
+    {standard input}:205    .text.RXPDO_update:0000000000000000 $t
+    {standard input}:212    .text.RXPDO_update:0000000000000000 RXPDO_update
+    {standard input}:229    .text.RXPDO_update:0000000000000018 $d
+    {standard input}:233    .text.APP_setwatchdog:0000000000000000 $t
+    {standard input}:240    .text.APP_setwatchdog:0000000000000000 APP_setwatchdog
+    {standard input}:252    .text.APP_setwatchdog:0000000000000010 $d
+    {standard input}:255    .text.DIG_process:0000000000000000 $t
+    {standard input}:262    .text.DIG_process:0000000000000000 DIG_process
+    {standard input}:358    .text.DIG_process:00000000000000e4 $d
+    {standard input}:363    .text.ecat_slv_worker:0000000000000000 $t
+    {standard input}:370    .text.ecat_slv_worker:0000000000000000 ecat_slv_worker
+    {standard input}:410    .text.ecat_slv_worker:000000000000005c $d
+    {standard input}:413    .text.ecat_slv_poll:0000000000000000 $t
+    {standard input}:420    .text.ecat_slv_poll:0000000000000000 ecat_slv_poll
+    {standard input}:447    .text.ecat_slv_poll:000000000000003c $d
+    {standard input}:451    .text.ecat_slv:0000000000000000 $t
+    {standard input}:458    .text.ecat_slv:0000000000000000 ecat_slv
+    {standard input}:468    .text.ecat_slv_init:0000000000000000 $t
+    {standard input}:475    .text.ecat_slv_init:0000000000000000 ecat_slv_init
+    {standard input}:510    .text.ecat_slv_init:0000000000000050 $d
+                            *COM*:0000000000000000 SMmap3
+                            *COM*:0000000000000000 SMmap2
+                            *COM*:0000000000000003 MBXcontrol
+                            *COM*:0000000000000180 MBX
+    {standard input}:519    .bss.watchdog:0000000000000000 $d
+    {standard input}:523    .bss.watchdog:0000000000000000 watchdog
+
+UNDEFINED SYMBOLS
+COE_maxSub
+ESC_write
+txpdo
+ESC_read
+rxpdo
+ESC_ALstatusgotoerror
+cb_set_outputs
+cb_get_inputs
+ESC_state
+ESC_sm_act_event
+ESC_mbxprocess
+ESC_ALeventread
+ESC_ALeventmaskread
+ESC_ALeventmaskwrite
+ESC_coeprocess
+ESC_xoeprocess
+ESC_config
+ESC_init
+ESC_ALstatus
+ESC_ALerror
+ESC_stopmbx
+ESC_stopinput
+ESC_stopoutput
+COE_initDefaultValues

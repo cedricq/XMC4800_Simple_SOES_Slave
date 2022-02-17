@@ -1,0 +1,120 @@
+   1              	 .cpu cortex-m4
+   2              	 .eabi_attribute 27,1
+   3              	 .eabi_attribute 20,1
+   4              	 .eabi_attribute 21,1
+   5              	 .eabi_attribute 23,3
+   6              	 .eabi_attribute 24,1
+   7              	 .eabi_attribute 25,1
+   8              	 .eabi_attribute 26,1
+   9              	 .eabi_attribute 30,4
+  10              	 .eabi_attribute 34,1
+  11              	 .eabi_attribute 18,4
+  12              	 .file "esc_eep.c"
+  13              	 .text
+  14              	 .section .text.EEP_process,"ax",%progbits
+  15              	 .align 1
+  16              	 .global EEP_process
+  17              	 .arch armv7e-m
+  18              	 .syntax unified
+  19              	 .thumb
+  20              	 .thumb_func
+  21              	 .fpu fpv4-sp-d16
+  23              	EEP_process:
+  24              	 
+  25              	 
+  26 0000 264B     	 ldr r3,.L14
+  27 0002 B3F8DC30 	 ldrh r3,[r3,#220]
+  28 0006 9B06     	 lsls r3,r3,#26
+  29 0008 13B5     	 push {r0,r1,r4,lr}
+  30 000a 45D5     	 bpl .L1
+  31 000c 244C     	 ldr r4,.L14+4
+  32              	.L10:
+  33 000e 40F20250 	 movw r0,#1282
+  34 0012 0622     	 movs r2,#6
+  35 0014 6946     	 mov r1,sp
+  36 0016 FFF7FEFF 	 bl ESC_read
+  37 001a 9DF90130 	 ldrsb r3,[sp,#1]
+  38 001e DDF80200 	 ldr r0,[sp,#2]
+  39 0022 002B     	 cmp r3,#0
+  40 0024 38DA     	 bge .L1
+  41 0026 9DF80130 	 ldrb r3,[sp,#1]
+  42 002a 23F07803 	 bic r3,r3,#120
+  43 002e 8DF80130 	 strb r3,[sp,#1]
+  44 0032 03F00703 	 and r3,r3,#7
+  45 0036 042B     	 cmp r3,#4
+  46 0038 0AD8     	 bhi .L3
+  47 003a DFE803F0 	 tbb [pc,r3]
+  48              	.L5:
+  49 003e 16       	 .byte (.L7-.L5)/2
+  50 003f 03       	 .byte (.L4-.L5)/2
+  51 0040 1D       	 .byte (.L6-.L5)/2
+  52 0041 09       	 .byte (.L3-.L5)/2
+  53 0042 03       	 .byte (.L4-.L5)/2
+  54 0043 00       	 .p2align 1
+  55              	.L4:
+  56 0044 0822     	 movs r2,#8
+  57 0046 2146     	 mov r1,r4
+  58 0048 4000     	 lsls r0,r0,#1
+  59 004a FFF7FEFF 	 bl EEP_read
+  60 004e 30B1     	 cbz r0,.L8
+  61              	.L3:
+  62 0050 9DF80130 	 ldrb r3,[sp,#1]
+  63 0054 43F02003 	 orr r3,r3,#32
+  64 0058 8DF80130 	 strb r3,[sp,#1]
+  65 005c 05E0     	 b .L7
+  66              	.L8:
+  67 005e 0822     	 movs r2,#8
+  68 0060 2146     	 mov r1,r4
+  69 0062 4FF4A160 	 mov r0,#1288
+  70 0066 FFF7FEFF 	 bl ESC_write
+  71              	.L7:
+  72 006a 0222     	 movs r2,#2
+  73 006c 6946     	 mov r1,sp
+  74 006e 40F20250 	 movw r0,#1282
+  75 0072 FFF7FEFF 	 bl ESC_write
+  76 0076 CAE7     	 b .L10
+  77              	.L6:
+  78 0078 0222     	 movs r2,#2
+  79 007a 2146     	 mov r1,r4
+  80 007c 4FF4A160 	 mov r0,#1288
+  81 0080 FFF7FEFF 	 bl ESC_read
+  82 0084 DDF80200 	 ldr r0,[sp,#2]
+  83 0088 0222     	 movs r2,#2
+  84 008a 2146     	 mov r1,r4
+  85 008c 4000     	 lsls r0,r0,#1
+  86 008e FFF7FEFF 	 bl EEP_write
+  87 0092 0028     	 cmp r0,#0
+  88 0094 DCD1     	 bne .L3
+  89 0096 E8E7     	 b .L7
+  90              	.L1:
+  91 0098 02B0     	 add sp,sp,#8
+  92              	 
+  93 009a 10BD     	 pop {r4,pc}
+  94              	.L15:
+  95              	 .align 2
+  96              	.L14:
+  97 009c 00000000 	 .word ESCvar
+  98 00a0 00000000 	 .word .LANCHOR0
+ 100              	 .section .bss.eep_buf,"aw",%nobits
+ 101              	 .set .LANCHOR0,.+0
+ 104              	eep_buf:
+ 105 0000 00000000 	 .space 8
+ 105      00000000 
+ 106              	 .ident "GCC: (15:9-2019-q4-0ubuntu1) 9.2.1 20191025 (release) [ARM/arm-9-branch revision 277599]"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 esc_eep.c
+    {standard input}:15     .text.EEP_process:0000000000000000 $t
+    {standard input}:23     .text.EEP_process:0000000000000000 EEP_process
+    {standard input}:49     .text.EEP_process:000000000000003e $d
+    {standard input}:97     .text.EEP_process:000000000000009c $d
+    {standard input}:104    .bss.eep_buf:0000000000000000 eep_buf
+    {standard input}:105    .bss.eep_buf:0000000000000000 $d
+    {standard input}:54     .text.EEP_process:0000000000000043 $d
+    {standard input}:54     .text.EEP_process:0000000000000044 $t
+
+UNDEFINED SYMBOLS
+ESC_read
+EEP_read
+ESC_write
+EEP_write
+ESCvar
