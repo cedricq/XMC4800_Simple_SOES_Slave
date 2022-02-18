@@ -9,6 +9,8 @@ project(xmc4800_simple_soes_slave LANGUAGES C CXX ASM)
 add_subdirectory(xmclib)
 add_subdirectory(soes)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 add_executable(
     ${PROJECT_NAME}.elf
     main.c
