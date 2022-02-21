@@ -24,16 +24,10 @@ set(LINKERFLAGS						"-nostartfiles -T${LINKER_SCRIPT}  -Xlinker --gc-sections -
 set(CMAKE_CXX_FLAGS                 "${CPPFLAGS}" CACHE INTERNAL "")
 set(CMAKE_ASM_FLAGS                 "${ASMFLAGS}" CACHE INTERNAL "")
 set(CMAKE_C_FLAGS                   "${CFLAGS}" CACHE INTERNAL "")
-
-set(CMAKE_C_FLAGS_DEBUG             "${CPPFLAGS} ${OBJFLAGS} -Os -ffunction-sections -fdata-sections  -std=c++11 -pipe -g" CACHE INTERNAL "")
-set(CMAKE_C_FLAGS_RELEASE           "${CPPFLAGS} ${OBJFLAGS} -Os -ffunction-sections -fdata-sections  -std=c++11 -pipe -DNDEBUG" CACHE INTERNAL "")
-set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_C_FLAGS_DEBUG}" CACHE INTERNAL "")
-set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_C_FLAGS_RELEASE}" CACHE INTERNAL "")
 set(CMAKE_EXE_LINKER_FLAGS			"${LINKERFLAGS}" CACHE INTERNAL "")
 
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-
 
