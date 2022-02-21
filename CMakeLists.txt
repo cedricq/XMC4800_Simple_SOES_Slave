@@ -21,7 +21,8 @@ add_executable(
 target_link_libraries(${PROJECT_NAME}.elf xmclib soes)
 
 execute_process(
-   COMMAND ${CMAKE_OBJCOPY} -I binary -O elf32-littlearm -B arm ../sii_eeprom.bin sii_eeprom.o
+    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/sii_eeprom.bin ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_OBJCOPY} -I binary -O elf32-littlearm -B arm sii_eeprom.bin sii_eeprom.o
 )
 
 add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
