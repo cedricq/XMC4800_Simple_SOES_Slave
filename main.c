@@ -8,14 +8,9 @@
 #include "xmc_gpio.h"
 
 #ifdef XMC4800_F144x2048
-#define P_LED  P5_8
-#define P_BTN  P15_12
+#define P_LED     P5_8
+#define P_BTN     P15_12
 #include "xmc4_gpio.h"
-#endif
-
-#ifdef XMC4300_F100x256
-#define P_LED  P4_1
-#define P_BTN  P3_4
 #endif
 
 extern void ESC_eep_handler(void);
@@ -146,6 +141,7 @@ void soes (void * arg)
 	   // TEST LED BLINKING - LED2 - P5.8
 	   static int cnt = 0;
 	   static int cnt_ini = 0;
+      
 	   cnt++;
 	   if ( (cnt - cnt_ini) > 100000)
 	   {
@@ -155,8 +151,6 @@ void soes (void * arg)
 
 	   // RUN ETHERCAT SLAVE
 	   ecat_slv();
-
-
 
    }
 }
