@@ -14,11 +14,11 @@
 
 #include <string.h>
 
-extern const uint8_t _binary____sii_eeprom_bin_start;
-extern const uint8_t _binary____sii_eeprom_bin_end;
+extern const uint8_t _binary_sii_eeprom_bin_start;
+extern const uint8_t _binary_sii_eeprom_bin_end;
 
-#define SII_EE_DEFLT (&_binary____sii_eeprom_bin_start)
-#define SII_EE_DEFLT_SIZE (uint32_t)(&_binary____sii_eeprom_bin_end - &_binary____sii_eeprom_bin_start)
+#define SII_EE_DEFLT (&_binary_sii_eeprom_bin_start)
+#define SII_EE_DEFLT_SIZE (uint32_t)(&_binary_sii_eeprom_bin_end - &_binary_sii_eeprom_bin_start)
 
 #if EEP_BYTES_PER_BLOCK > EEP_BYTES_PER_SECTOR
 #error EEP_BYTES_PER_BLOCK needs to fit into EEP_BYTES_PER_SECTOR
