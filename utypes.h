@@ -22,6 +22,8 @@ typedef struct
    uint8_t state;
    uint8_t button;
    uint32_t encoder;
+   uint32_t sensor;
+   uint32_t adc;
 }CC_PACKED _Rbuffer;
 CC_PACKED_END
 
@@ -29,6 +31,7 @@ CC_PACKED_BEGIN
 typedef struct
 {
    uint8_t LED;
+   uint8_t power;
 }CC_PACKED _Wbuffer;
 CC_PACKED_END
 
