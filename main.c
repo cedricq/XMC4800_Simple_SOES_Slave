@@ -8,9 +8,15 @@
 #include "xmc_gpio.h"
 
 #ifdef XMC4800_F144x2048
-#define P_LED     P5_8
-#define P_BTN     P15_12
+#define P_LED1  P5_9
+#define P_LED2  P5_8
+#define P_BTN   P15_12
 #include "xmc4_gpio.h"
+#endif
+
+#ifdef XMC4300_F100x256
+#define P_LED2 P4_1
+#define P_BTN  P3_4
 #endif
 
 extern void ESC_eep_handler(void);
@@ -49,11 +55,11 @@ void cb_set_outputs (void)
 {
    if (Wb.LED)
    {
-      XMC_GPIO_SetOutputHigh(P_LED);
+      XMC_GPIO_SetOutputHigh(P_LED2);
    }
    else
    {
-      XMC_GPIO_SetOutputLow(P_LED);
+      XMC_GPIO_SetOutputLow(P_LED2);
    }
 }
 
@@ -95,12 +101,12 @@ void led_toggle()
 
 	if (toggle)
 	{
-		XMC_GPIO_SetOutputLow(P_LED);
+		XMC_GPIO_SetOutputLow(P_LED1);
 		toggle = false;
 	}
 	else
 	{
-		XMC_GPIO_SetOutputHigh(P_LED);
+		XMC_GPIO_SetOutputHigh(P_LED1);
 		toggle = true;
 	}
 }
@@ -132,7 +138,8 @@ void soes (void * arg)
 
    // configure I/O
    XMC_GPIO_Init(P_BTN, &gpio_config_btn);
-   XMC_GPIO_Init(P_LED, &gpio_config_led);
+   XMC_GPIO_Init(P_LED1, &gpio_config_led);
+   XMC_GPIO_Init(P_LED2, &gpio_config_led);
 
    ecat_slv_init (&config);
 
@@ -151,7 +158,6 @@ void soes (void * arg)
 
 	   // RUN ETHERCAT SLAVE
 	   ecat_slv();
-
    }
 }
 
