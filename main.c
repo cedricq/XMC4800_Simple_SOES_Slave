@@ -26,8 +26,8 @@ _Rbuffer    Rb;
 _Wbuffer    Wb;
 _Cbuffer    Cb;
 
-uint8_t * rxpdo = (uint8_t *)&Wb.LED;
-uint8_t * txpdo = (uint8_t *)&Rb.button;
+uint8_t * rxpdo = (uint8_t *)&Wb;
+uint8_t * txpdo = (uint8_t *)&Rb;
 
 uint32_t encoder_scale;
 uint32_t encoder_scale_mirror;
@@ -46,21 +46,21 @@ static const XMC_GPIO_CONFIG_t gpio_config_led = {
 
 void cb_get_inputs (void)
 {
-   Rb.button = XMC_GPIO_GetInput(P_BTN);
+   //Rb.button = XMC_GPIO_GetInput(P_BTN);
    Cb.reset_counter++;
-   Rb.encoder =  ESCvar.Time;
+   //Rb.encoder =  ESCvar.Time;
 }
 
 void cb_set_outputs (void)
 {
-   if (Wb.LED)
-   {
-      XMC_GPIO_SetOutputHigh(P_LED2);
-   }
-   else
-   {
-      XMC_GPIO_SetOutputLow(P_LED2);
-   }
+   // if (Wb.LED)
+   // {
+   //    XMC_GPIO_SetOutputHigh(P_LED2);
+   // }
+   // else
+   // {
+   //    XMC_GPIO_SetOutputLow(P_LED2);
+   // }
 }
 
 void post_object_download_hook (uint16_t index, uint8_t subindex,
