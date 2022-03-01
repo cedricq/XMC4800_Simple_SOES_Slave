@@ -13,6 +13,7 @@ add_executable(
     ${PROJECT_NAME}.elf
     main.c
     objectlist.c
+    imu.c
 	newlib/syscalls.c
 	${CMAKE_BINARY_DIR}/sii_eeprom.o
 )

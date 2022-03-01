@@ -6,12 +6,12 @@
 #include "ecat_slv.h"
 #include "utypes.h"
 #include "xmc_gpio.h"
+#include "imu.h"
 
 #ifdef XMC4800_F144x2048
 #define P_LED1  P5_9
 #define P_LED2  P5_8
 #define P_BTN   P15_12
-#include "xmc4_gpio.h"
 #endif
 
 #ifdef XMC4300_F100x256
@@ -32,6 +32,9 @@ uint8_t * txpdo = (uint8_t *)&Rb;
 uint32_t encoder_scale;
 uint32_t encoder_scale_mirror;
 
+uint16_t spi_rxbuf[1024];
+uint16_t spi_txbuf[1024];
+
 static const XMC_GPIO_CONFIG_t gpio_config_btn = {
   .mode = XMC_GPIO_MODE_INPUT_INVERTED_PULL_UP,
   .output_level = 0,
@@ -46,21 +49,21 @@ static const XMC_GPIO_CONFIG_t gpio_config_led = {
 
 void cb_get_inputs (void)
 {
-   //Rb.button = XMC_GPIO_GetInput(P_BTN);
+   Rb.watchdogCounter = XMC_GPIO_GetInput(P_BTN);
    Cb.reset_counter++;
-   //Rb.encoder =  ESCvar.Time;
+   Rb.boardStatus =  (uint16_t)ESCvar.Time;
 }
 
 void cb_set_outputs (void)
 {
-   // if (Wb.LED)
-   // {
-   //    XMC_GPIO_SetOutputHigh(P_LED2);
-   // }
-   // else
-   // {
-   //    XMC_GPIO_SetOutputLow(P_LED2);
-   // }
+   if (Wb.watchdogCounter)
+   {
+      XMC_GPIO_SetOutputHigh(P_LED2);
+   }
+   else
+   {
+      XMC_GPIO_SetOutputLow(P_LED2);
+   }
 }
 
 void post_object_download_hook (uint16_t index, uint8_t subindex,
@@ -140,6 +143,10 @@ void soes (void * arg)
    XMC_GPIO_Init(P_BTN, &gpio_config_btn);
    XMC_GPIO_Init(P_LED1, &gpio_config_led);
    XMC_GPIO_Init(P_LED2, &gpio_config_led);
+
+   // configure SPI /IMU
+   initSPICom();
+   configureIMU();
 
    ecat_slv_init (&config);
 
