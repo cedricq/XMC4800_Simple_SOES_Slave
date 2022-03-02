@@ -14,6 +14,18 @@
 #define IMU_SPI_SS 		P3_10
 #endif
 
+/**
+ * \struct IMURawData_s
+ * \brief Structure of data get from the IMU.
+ */
+typedef struct
+{
+    int16_t accelerometer[3];       /**< Raw data collected from the 3 axis of the accelerometer */
+    int16_t gyroscope[3];           /**< Raw data collected from the 3 axis of the gyroscope */
+    int16_t temperatureSensor;      /**< Raw data collected from the temperature sensor */
+    uint16_t timeStamp;             /**< Raw data collected from the temperature sensor */
+} IMURawData_s;
+
 enum SPIAction
 {
     SPI_READ    = 0b10000000,
@@ -116,7 +128,10 @@ enum IMUConfiguration
 ***************************************************************/
 void initSPICom(void);
 void configureIMU(void);
+void readIMU(void);
 
-void sendWord(XMC_USIC_CH_t *const channel, uint16_t* data);
+IMURawData_s fetchRawIMU(uint8_t* buffer);
+
+void sendWord(XMC_USIC_CH_t *const channel, uint16_t data);
 
 #endif
