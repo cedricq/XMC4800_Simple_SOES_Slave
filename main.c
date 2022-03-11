@@ -6,12 +6,12 @@
 #include "ecat_slv.h"
 #include "utypes.h"
 #include "xmc_gpio.h"
+#include "imu.h"
 
 #ifdef XMC4800_F144x2048
 #define P_LED1  P5_9
 #define P_LED2  P5_8
 #define P_BTN   P15_12
-#include "xmc4_gpio.h"
 #endif
 
 #ifdef XMC4300_F100x256
@@ -32,6 +32,9 @@ uint8_t * txpdo = (uint8_t *)&Rb;
 uint32_t encoder_scale;
 uint32_t encoder_scale_mirror;
 
+IMURawData_s lastRawIMU;
+IMURawData_s currentRawIMU;
+
 static const XMC_GPIO_CONFIG_t gpio_config_btn = {
   .mode = XMC_GPIO_MODE_INPUT_INVERTED_PULL_UP,
   .output_level = 0,
@@ -46,21 +49,42 @@ static const XMC_GPIO_CONFIG_t gpio_config_led = {
 
 void cb_get_inputs (void)
 {
-   //Rb.button = XMC_GPIO_GetInput(P_BTN);
+   Rb.watchdogCounter = XMC_GPIO_GetInput(P_BTN);
    Cb.reset_counter++;
-   //Rb.encoder =  ESCvar.Time;
+   Rb.boardStatus =  (uint16_t)ESCvar.Time;
+
+   // get IMU data
+   Rb.ankleIMU.accelerometerX0 = currentRawIMU.accelerometer[0];
+   Rb.ankleIMU.accelerometerY0 = currentRawIMU.accelerometer[1];
+   Rb.ankleIMU.accelerometerZ0 = currentRawIMU.accelerometer[2];
+
+   Rb.ankleIMU.gyroscopeX0 = currentRawIMU.gyroscope[0];
+   Rb.ankleIMU.gyroscopeY0 = currentRawIMU.gyroscope[1];
+   Rb.ankleIMU.gyroscopeZ0 = currentRawIMU.gyroscope[2];
+
+   Rb.ankleIMU.temperature0 = currentRawIMU.temperatureSensor;
+
+   Rb.ankleIMU.accelerometerX1 = lastRawIMU.accelerometer[0];
+   Rb.ankleIMU.accelerometerY1 = lastRawIMU.accelerometer[1];
+   Rb.ankleIMU.accelerometerZ1 = lastRawIMU.accelerometer[2];
+
+   Rb.ankleIMU.gyroscopeX1 = lastRawIMU.gyroscope[0];
+   Rb.ankleIMU.gyroscopeY1 = lastRawIMU.gyroscope[1];
+   Rb.ankleIMU.gyroscopeZ1 = lastRawIMU.gyroscope[2];
+
+   Rb.ankleIMU.temperature1 = lastRawIMU.temperatureSensor;
 }
 
 void cb_set_outputs (void)
 {
-   // if (Wb.LED)
-   // {
-   //    XMC_GPIO_SetOutputHigh(P_LED2);
-   // }
-   // else
-   // {
-   //    XMC_GPIO_SetOutputLow(P_LED2);
-   // }
+   if (Wb.watchdogCounter)
+   {
+      XMC_GPIO_SetOutputHigh(P_LED2);
+   }
+   else
+   {
+      XMC_GPIO_SetOutputLow(P_LED2);
+   }
 }
 
 void post_object_download_hook (uint16_t index, uint8_t subindex,
@@ -141,6 +165,10 @@ void soes (void * arg)
    XMC_GPIO_Init(P_LED1, &gpio_config_led);
    XMC_GPIO_Init(P_LED2, &gpio_config_led);
 
+   // configure SPI /IMU
+   initSPICom();
+   configureIMU();
+
    ecat_slv_init (&config);
 
    while (1)
@@ -148,6 +176,8 @@ void soes (void * arg)
 	   // TEST LED BLINKING - LED2 - P5.8
 	   static int cnt = 0;
 	   static int cnt_ini = 0;
+	   static int cnt_imu = 0;
+	   static int cnt_imu_ini = 0;
       
 	   cnt++;
 	   if ( (cnt - cnt_ini) > 100000)
@@ -156,6 +186,14 @@ void soes (void * arg)
 		   led_toggle();
 	   }
 
+      // Read IMU values
+      cnt_imu++;
+	   if ( (cnt_imu - cnt_imu_ini) > 100)
+	   {
+         cnt_imu_ini = cnt_imu;
+         readIMU();
+      }
+      
 	   // RUN ETHERCAT SLAVE
 	   ecat_slv();
    }
