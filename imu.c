@@ -1,12 +1,13 @@
 #include "imu.h"
 #include "utypes.h"
+#include "time.h"
 
 /****************************************************************
 * MACROS AND DEFINES
 ***************************************************************/
 XMC_SPI_CH_CONFIG_t imu_spi_config =
 {
-  .baudrate = 2000000,
+  .baudrate = 4000000,
   .bus_mode = XMC_SPI_CH_BUS_MODE_MASTER,
   .selo_inversion = XMC_SPI_CH_SLAVE_SEL_INV_TO_MSLS,
   .parity_mode = XMC_USIC_CH_PARITY_MODE_NONE
@@ -21,6 +22,7 @@ extern _Cbuffer    Cb;
 extern IMURawData_s lastRawIMU;
 extern IMURawData_s currentRawIMU;
 
+uint16_t count = 0;
 
 /****************************************************************
 * API IMPLEMENTATION
@@ -85,7 +87,7 @@ void USIC2_0_IRQHandler(void)
 }
 
 IMURawData_s fetchRawIMU(uint8_t* buffer)
-{
+{  
   IMURawData_s imuPDOObject;
 
   int16_t temperature_raw = ((int16_t)buffer[1] << 8) + (int16_t)buffer[0];
@@ -99,7 +101,10 @@ IMURawData_s fetchRawIMU(uint8_t* buffer)
   imuPDOObject.accelerometer[2] = ((((int16_t)buffer[13]) << 8) + (int16_t)buffer[12]);
 
   imuPDOObject.temperatureSensor = (temperature_raw / 256) + 25;
-  
+  imuPDOObject.timeStamp = (uint16_t) count;
+
+  count++;
+
   return imuPDOObject;
 }
 

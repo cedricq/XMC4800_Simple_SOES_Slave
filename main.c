@@ -62,7 +62,9 @@ void cb_get_inputs (void)
    Rb.ankleIMU.gyroscopeY0 = currentRawIMU.gyroscope[1];
    Rb.ankleIMU.gyroscopeZ0 = currentRawIMU.gyroscope[2];
 
-   Rb.ankleIMU.temperature0 = currentRawIMU.temperatureSensor;
+   Rb.ankleIMU.temperature0   = currentRawIMU.temperatureSensor;
+   Rb.ankleIMU.timestamp0     = currentRawIMU.timeStamp;
+
 
    Rb.ankleIMU.accelerometerX1 = lastRawIMU.accelerometer[0];
    Rb.ankleIMU.accelerometerY1 = lastRawIMU.accelerometer[1];
@@ -73,6 +75,8 @@ void cb_get_inputs (void)
    Rb.ankleIMU.gyroscopeZ1 = lastRawIMU.gyroscope[2];
 
    Rb.ankleIMU.temperature1 = lastRawIMU.temperatureSensor;
+   Rb.ankleIMU.timestamp1   = lastRawIMU.timeStamp;
+
 }
 
 void cb_set_outputs (void)
@@ -188,7 +192,7 @@ void soes (void * arg)
 
       // Read IMU values
       cnt_imu++;
-	   if ( (cnt_imu - cnt_imu_ini) > 100)
+	   if ( (cnt_imu - cnt_imu_ini) > 5)
 	   {
          cnt_imu_ini = cnt_imu;
          readIMU();
