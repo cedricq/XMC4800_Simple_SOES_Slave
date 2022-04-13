@@ -14,6 +14,11 @@
  + C/C++ Intellisense: [link](https://marketplace.visualstudio.com/items?itemName=austin.code-gnu-global) optional
 
 ## Build steps
+Add the following to your `~/.bashrc` so that the build process can find the necessary binaries. 
+```
+export PATH="PATH_TO_GCC_ARM/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH"
+source ~/.bashrc
+```
 ```
 sudo apt install ncurses5
 mv vscode .vscode
