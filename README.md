@@ -52,9 +52,13 @@ https://projects.eclipse.org/projects/iot.embed-cdt
 
 
 3. Setup in the project options the build options:
-![image](https://user-images.githubusercontent.com/32091677/155190323-6eb39fa0-5082-4808-8fc9-bac357f5d7be.png)
 
-![image](https://user-images.githubusercontent.com/32091677/155190407-c26a882e-60c5-4bb2-acad-a88c31daa5a7.png)
+![image](https://user-images.githubusercontent.com/32091677/187872553-90631c6d-809b-452d-a086-5248c7b851b4.png)
+
+![image](https://user-images.githubusercontent.com/32091677/187872851-fc34c623-b7f5-4292-9b10-504c66052c14.png)
+
+![image](https://user-images.githubusercontent.com/32091677/187873001-935776b4-76d0-4cf2-8fd5-91b2e4283ab0.png)
+
 
 4. Setup the debug configuration:
 ![image](https://user-images.githubusercontent.com/32091677/155190736-10b3bfe0-a981-49ec-9660-5dd344130051.png)
