@@ -41,11 +41,15 @@ https://projects.eclipse.org/projects/iot.embed-cdt
 2. Install Jlink, GCC ARM, OpenOCD
 
 2. Setup in the project options the MCU tools:
+
 ![image](https://user-images.githubusercontent.com/32091677/155189890-06e1cdce-28ce-4441-87dc-e178081a358d.png)
 
-![image](https://user-images.githubusercontent.com/32091677/155189993-8970d03a-c1af-4a55-888b-75016ac61414.png)
+![image](https://user-images.githubusercontent.com/32091677/187872006-0ac2433f-b50c-43ef-8760-5caf0cf25b45.png)
 
-![image](https://user-images.githubusercontent.com/32091677/155190050-8f32889d-f0cf-49af-93d0-6385fb0dd369.png)
+![image](https://user-images.githubusercontent.com/32091677/187872082-cb9a6672-e042-40a9-b243-00427a708e31.png)
+
+![image](https://user-images.githubusercontent.com/32091677/187872181-fb334a51-271e-40f2-99a9-ea66ce09dd4b.png)
+
 
 3. Setup in the project options the build options:
 ![image](https://user-images.githubusercontent.com/32091677/155190323-6eb39fa0-5082-4808-8fc9-bac357f5d7be.png)
